@@ -24,7 +24,7 @@ class CustomLoader(sgtk.platform.Application):
         """
         Called as the application is being initialized
         """
-        
+        print "v0.0.3"
         tk_custom_loader = self.import_module("tk_custom_loader01")
         
         # register command
