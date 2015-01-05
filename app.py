@@ -8,34 +8,46 @@
 # agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
+"""
+A loader application that lets you add new items to the scene.
+"""
 
-from sgtk.platform import Application
+from sgtk.platform.qt import QtCore, QtGui
 
-class StgkStarterApp(Application):
-    """
-    The app entry point. This class is responsible for intializing and tearing down
-    the application, handle menu registration etc.
-    """
+import sgtk
+import sys
+import os
+
+class CustomLoader(sgtk.platform.Application):
     
     def init_app(self):
         """
         Called as the application is being initialized
         """
         
-        # first, we use the special import_module command to access the app module
-        # that resides inside the python folder in the app. This is where the actual UI
-        # and business logic of the app is kept. By using the import_module command,
-        # toolkit's code reload mechanism will work properly.
-        app_payload = self.import_module("app")
-
-        # now register a *command*, which is normally a menu entry of some kind on a Shotgun
-        # menu (but it depends on the engine). The engine will manage this command and 
-        # whenever the user requests the command, it will call out to the callback.
-
-        # first, set up our callback, calling out to a method inside the app module contained
-        # in the python folder of the app
-        menu_callback = lambda : app_payload.dialog.show_dialog(self)
-
-        # now register the command with the engine
-        self.engine.register_command("Show Starter Template App...", menu_callback)
+        tk_custom_loader = self.import_module("tk_custom_loader01")
         
+        # register command
+        cb = lambda : tk_custom_loader.show_dialog(self)
+        menu_caption = "%s..." % self.get_setting("menu_name")
+        menu_options = { "short_name": self.get_setting("menu_name").replace(" ", "_") }
+        self.engine.register_command(menu_caption, cb, menu_options)        
+
+    def open_publish(self, title="Open Publish", action="Open", publish_types = []):
+        """
+        Display the loader UI in an open-file style where a publish can be selected and the
+        artist can then click the action button.  This will then return the selected publish.
+
+        :param title:                   The title to be used for the dialog
+        :param action:                  The label to use for the action button
+        :param publish_types:           If specified then the UI will only show publishes
+                                        that matches these types - this overrides the setting
+                                        from the configuration.
+        :returns:                       A list of Shotgun publish records for the publish(es)
+                                        that were selected in the UI.  Each record in the list
+                                        is garunteed to have a type and id but will usually
+                                        contain a much more complete list of fields from the
+                                        Shotgun PublishedFile entity
+        """
+        tk_custom_loader = self.import_module("tk_custom_loader01")
+        return tk_custom_loader.open_publish_browser(self, title, action, publish_types)

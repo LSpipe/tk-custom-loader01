@@ -11,7 +11,7 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 # The path to output all built .py files to: 
-UI_PYTHON_PATH=../python/app/ui
+UI_PYTHON_PATH=../python/tk_multi_loader/ui
 
 
 # Helper functions to build UI files
@@ -21,8 +21,8 @@ function build_qt {
     # compile ui to python
     $1 $2 > $UI_PYTHON_PATH/$3.py
     
-    # replace PySide imports with tank.platform.qt and remove line containing Created by date
-    sed -i "" -e "s/from PySide import/from tank.platform.qt import/g" -e "/# Created:/d" $UI_PYTHON_PATH/$3.py
+    # replace PySide imports with sgtk.platform.qt and remove line containing Created by date
+    sed -i "" -e "s/from PySide import/from sgtk.platform.qt import/g" -e "/# Created:/d" $UI_PYTHON_PATH/$3.py
 }
 
 function build_ui {
@@ -37,8 +37,9 @@ function build_res {
 # build UI's:
 echo "building user interfaces..."
 build_ui dialog
-# add any additional .ui files you want converted here!
+build_ui open_publish_form
 
 # build resources
 echo "building resources..."
 build_res resources
+
