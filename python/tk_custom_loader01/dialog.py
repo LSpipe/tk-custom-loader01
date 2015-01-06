@@ -8,7 +8,7 @@
 # agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
-import sgtk
+import sgtk, tank
 from sgtk import TankError
 from sgtk.platform.qt import QtCore, QtGui
 
@@ -1549,7 +1549,9 @@ class AppDialog(QtGui.QWidget):
                 app = sgtk.platform.current_bundle()
                 if entityType == 'Shot':
                     entityId = selectedItem.get_sg_data()['id']
-                    tk = sgtk.sgtk_from_path('N:/software/shotgun/TESTING123_sandbox')
+                    # tk = sgtk.sgtk_from_path('N:/software/shotgun/TESTING123_sandbox')
+                    current_engine = tank.platform.current_engine()
+                    tk = current_engine.sgtk
                     tk.create_filesystem_structure(entityType, entityId)
                     self.shotPublishPath = tk.templates[app.get_setting('shotPublishPathTemplate')]
                     self.shotFields = {}
@@ -1589,7 +1591,9 @@ class AppDialog(QtGui.QWidget):
                                 "File Already exists"
                 elif entityType == 'Asset':
                     entityId = selectedItem.get_sg_data()['id']
-                    tk = sgtk.sgtk_from_path('N:/software/shotgun/TESTING123_sandbox')
+                    # tk = sgtk.sgtk_from_path('N:/software/shotgun/TESTING123_sandbox')
+                    current_engine = tank.platform.current_engine()
+                    tk = current_engine.sgtk
                     tk.create_filesystem_structure(entityType, entityId)
                     self.assetPublishPath = tk.templates[app.get_setting('assetPublishPathTemplate')]
                     self.fields = {}
