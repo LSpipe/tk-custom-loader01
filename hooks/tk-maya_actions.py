@@ -192,6 +192,13 @@ class MayaActions(HookBaseClass):
         
         # perform a more or less standard maya import, putting all nodes brought in into a specific namespace
         cmds.file(path, i=True, renameAll=True, namespace=namespace, loadReferenceDepth="all", preserveReferences=True)
+        getAllNameSpaces = cmds.namespaceInfo(listOnlyNamespaces = True)
+        for eachNS in getAllNameSpaces:
+            if namespace in eachNS and 'CORE' not in eachNS:
+                try:
+                    cmds.namespace(removeNamespace = eachNS, mergeNamespaceWithRoot = True)
+                except RuntimeError:
+                    pass
             
     def _create_texture_node(self, path, sg_publish_data):
         """
