@@ -1602,68 +1602,66 @@ class AppDialog(QtGui.QWidget):
                     self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '')
                     self.fields['version'] = 000
                     tasks = tk.shotgun.find_one('Asset', [['id', 'is', selectedItem.get_sg_data()['id']]], fields = ['tasks'])['tasks']
-                    for each in tasks:
-                        if each['name'] != 'Art' and each['name'] != 'Master':
-                            if each['name'] == 'Model':
-                                self.fields['Step'] = 'Model'
-                                self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + each["name"]
-                                publishPath = self.assetPublishPath.apply_fields(self.fields)
-                                print publishPath
-                            elif each['name'] == 'Rig':
-                                self.fields['Step'] = 'Rig'
-                                self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + each["name"]
-                                publishPath = self.assetPublishPath.apply_fields(self.fields)
-                            elif each['name'] == 'Surface':
-                                self.fields['Step'] = 'Tex'
-                                self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + 'Tex'
-                                publishPath = self.assetPublishPath.apply_fields(self.fields)
-#                             elif each['name'] == 'Assembly Reference':
-#                                 self.fields['Step'] = 'ADEF'
-#                                 self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + 'ADEF'
-#                                 publishPath = self.assetPublishPath.apply_fields(self.fields)
-                            else:
-                                pass
-                            if not os.path.exists(publishPath):
-                                ctx = tk.context_from_path(publishPath)
-                                fileName = self.fields['name']
-#                                 fileName = '%s.v000.mb' % self.fields['name']
-                                sgtk.util.register_publish(tk, ctx, publishPath, fileName, self.fields['version'], task = each,  published_file_type = 'Maya Scene')
-                                if self.fields['sg_asset_type'] == 'Environment':
-                                    if each['name'] == "Model":
-                                        cmds.file(new=1, f=1)
-                                        assetInfoAttr_Var = assetInfoAttr.AssetInfoAttr()
-                                        lodHighGroup = cmds.group(n='%s_LODhigh_hrc' % selectedItem.get_sg_data()['code'], em=1)
-                                        assetInfoAttr_Var.assetNameAttr(selectedItem.get_sg_data()['code'], lodHighGroup)
-                                        assetInfoAttr_Var.assetTaskAttr(each['name'], lodHighGroup)
-                                        assetInfoAttr_Var.assetTypeAttr(selectedItem.get_sg_data()['sg_asset_type'], lodHighGroup)
-                                        assetInfoAttr_Var.assetIdAttr(selectedItem.get_sg_data()['id'], lodHighGroup)
-    #                                     assetInfoAttr_Var.assetTaskIdAttr(self.assetTaskId, lodHighGroup)
-                                        assetInfoAttr_Var.assetLODTypeAttr('High', lodHighGroup)
-                                        cmds.lockNode(l=1)
-                                        cmds.select(cl=1)
-    
-                                        lodLowGroup = cmds.group(n='%s_LODlow_hrc' % selectedItem.get_sg_data()['code'], em=1)
-                                        assetInfoAttr_Var.assetNameAttr(selectedItem.get_sg_data()['code'], lodLowGroup)
-                                        assetInfoAttr_Var.assetTaskAttr(each['name'], lodLowGroup)
-                                        assetInfoAttr_Var.assetTypeAttr(selectedItem.get_sg_data()['sg_asset_type'], lodLowGroup)
-                                        assetInfoAttr_Var.assetIdAttr(selectedItem.get_sg_data()['id'], lodLowGroup)
-    #                                     assetInfoAttr_Var.assetTaskIdAttr(self.assetTaskId, lodLowGroup)
-                                        assetInfoAttr_Var.assetLODTypeAttr('Low', lodLowGroup)
-                                        cmds.lockNode(l=1)
-                                        cmds.select(cl=1)
-                                        cmds.file(rename = publishPath)
-                                        cmds.file(s=1, f=1)
-                                    else:
-                                        cmds.file(new=1, f=1)
-                                        cmds.file(rename = publishPath)
-                                        cmds.file(s=1, f=1)
+                    if not self.fields['sg_asset_type'] == 'Environment':
+                        for each in tasks:
+                            if each['name'] != 'Art' and each['name'] != 'Master':
+                                if each['name'] == 'Model':
+                                    self.fields['Step'] = 'Model'
+                                    self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + each["name"]
+                                    publishPath = self.assetPublishPath.apply_fields(self.fields)
+                                    print publishPath
+                                elif each['name'] == 'Rig':
+                                    self.fields['Step'] = 'Rig'
+                                    self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + each["name"]
+                                    publishPath = self.assetPublishPath.apply_fields(self.fields)
+                                elif each['name'] == 'Surface':
+                                    self.fields['Step'] = 'Tex'
+                                    self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + 'Tex'
+                                    publishPath = self.assetPublishPath.apply_fields(self.fields)
+    #                             elif each['name'] == 'Assembly Reference':
+    #                                 self.fields['Step'] = 'ADEF'
+    #                                 self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + 'ADEF'
+    #                                 publishPath = self.assetPublishPath.apply_fields(self.fields)
                                 else:
+                                    pass
+                                if not os.path.exists(publishPath):
+                                    ctx = tk.context_from_path(publishPath)
+                                    fileName = self.fields['name']
+    #                                 fileName = '%s.v000.mb' % self.fields['name']
+                                    sgtk.util.register_publish(tk, ctx, publishPath, fileName, self.fields['version'], task = each,  published_file_type = 'Maya Scene')
                                     cmds.file(new=1, f=1)
                                     cmds.file(rename = publishPath)
                                     cmds.file(s=1, f=1)
+                                else:
+                                    "File Already exists"
+                        cmds.confirmDialog(title='Folders created confirmation', m='Folders created and the default files are also published', defaultButton='Ok')
+                    elif self.fields['sg_asset_type'] == 'Environment':
+                        for each in tasks:
+                            if each['name'] != 'Art' and each['name'] != 'Lowres' and each['name'] != 'Master':
+                                if each['name'] == 'Model':
+                                    self.fields['Step'] = 'Model'
+                                    self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + each["name"]
+                                    publishPath = self.assetPublishPath.apply_fields(self.fields)
+                                    print publishPath
+                                elif each['name'] == 'Surface':
+                                    self.fields['Step'] = 'Tex'
+                                    self.fields['name'] = selectedItem.get_sg_data()['code'].replace('_', '') + "Tex"
+                                    publishPath = self.assetPublishPath.apply_fields(self.fields)
+                                else:
+                                    pass
+                                if not os.path.exists(publishPath):
+                                    ctx = tk.context_from_path(publishPath)
+                                    fileName = self.fields['name']
+        #                                 fileName = '%s.v000.mb' % self.fields['name']
+                                    sgtk.util.register_publish(tk, ctx, publishPath, fileName, self.fields['version'], task = each,  published_file_type = 'Maya Scene')
+                                    cmds.file(new=1, f=1)
+                                    cmds.file(rename = publishPath)
+                                    cmds.file(s=1, f=1)
+                                else:
+                                    "File Already exists"
                             else:
                                 "File Already exists"
-                    cmds.confirmDialog(title='Folders created confirmation', m='Folders created and the default files are also published', defaultButton='Ok')
+                        cmds.confirmDialog(title='Folders created confirmation', m='Folders created and the default files are also published', defaultButton='Ok')
             else:
                 print "Select proper asset/shot please"
 
