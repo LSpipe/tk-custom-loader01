@@ -16,12 +16,12 @@ configuration:
     # UI customization
     menu_name:
         type: str
-        default_value: "Loader"
+        default_value: "Loader01"
         description: Name to appear on the Shotgun menu.
 
     title_name:
         type: str
-        default_value: "Loader"
+        default_value: "Loader01"
         description: Name to appear on the title of the UI Dialog.
 
 
@@ -150,7 +150,7 @@ supported_engines:
 requires_shotgun_fields:
 
 # More verbose description of this item
-display_name: "Loader"
+display_name: "Loader01"
 description: "Locate published files and reference them into your scene."
 
 # Required minimum versions for this item to run

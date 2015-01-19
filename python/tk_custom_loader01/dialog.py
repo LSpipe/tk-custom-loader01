@@ -1549,7 +1549,6 @@ class AppDialog(QtGui.QWidget):
                 app = sgtk.platform.current_bundle()
                 if entityType == 'Shot':
                     entityId = selectedItem.get_sg_data()['id']
-                    # tk = sgtk.sgtk_from_path('N:/software/shotgun/TESTING123_sandbox')
                     current_engine = tank.platform.current_engine()
                     tk = current_engine.sgtk
                     tk.create_filesystem_structure(entityType, entityId)
@@ -1591,7 +1590,6 @@ class AppDialog(QtGui.QWidget):
                                 "File Already exists"
                 elif entityType == 'Asset':
                     entityId = selectedItem.get_sg_data()['id']
-                    # tk = sgtk.sgtk_from_path('N:/software/shotgun/TESTING123_sandbox')
                     current_engine = tank.platform.current_engine()
                     tk = current_engine.sgtk
                     tk.create_filesystem_structure(entityType, entityId)
