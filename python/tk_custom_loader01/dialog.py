@@ -1585,7 +1585,7 @@ class AppDialog(QtGui.QWidget):
                                 sgtk.util.register_publish(tk, ctx, publishPath, fileName, self.shotFields['version'], task=each, published_file_type='Maya Scene')
                                 cmds.file(new=1, f=1)
                                 cmds.file(rename = publishPath)
-                                cmds.file(save=1, f=1)
+                                cmds.file(save=1, f=1, type= 'mayaBinary')
                             else:
                                 "File Already exists"
                 elif entityType == 'Asset':
@@ -1629,7 +1629,7 @@ class AppDialog(QtGui.QWidget):
                                     sgtk.util.register_publish(tk, ctx, publishPath, fileName, self.fields['version'], task = each,  published_file_type = 'Maya Scene')
                                     cmds.file(new=1, f=1)
                                     cmds.file(rename = publishPath)
-                                    cmds.file(s=1, f=1)
+                                    cmds.file(s=1, f=1, type= 'mayaBinary')
                                 else:
                                     "File Already exists"
                         cmds.confirmDialog(title='Folders created confirmation', m='Folders created and the default files are also published', defaultButton='Ok')
@@ -1654,7 +1654,7 @@ class AppDialog(QtGui.QWidget):
                                     sgtk.util.register_publish(tk, ctx, publishPath, fileName, self.fields['version'], task = each,  published_file_type = 'Maya Scene')
                                     cmds.file(new=1, f=1)
                                     cmds.file(rename = publishPath)
-                                    cmds.file(s=1, f=1)
+                                    cmds.file(s=1, f=1, type= 'mayaBinary')
                                 else:
                                     "File Already exists"
                             else:
